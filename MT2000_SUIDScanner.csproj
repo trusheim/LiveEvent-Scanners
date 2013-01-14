@@ -65,8 +65,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlankForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BlankForm.Designer.cs">
+      <DependentUpon>BlankForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Message.cs" />
     <Compile Include="Processor.cs" />
+    <Compile Include="SelectScreen.cs" />
     <Compile Include="SUID.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

@@ -59,6 +59,7 @@ namespace SU_MT2000_SUIDScanner
             menu.Add(new MenuDataItem("Save Admits", "save", null, Config.SaveBitmap));
             menu.Add(new MenuDataItem("Sales Mode", "sales", null, null));
             menu.Add(new MenuDataItem("Exit", "exit", null, Config.CloseBitmap));
+            menu.Add(new MenuDataItem("Etc", "etc", null, Config.CloseBitmap));
             
             readLabelEvent = new ReadLabelEventDelegate(ReadLabelEventCallback);
 
@@ -304,6 +305,12 @@ namespace SU_MT2000_SUIDScanner
                     setGreenLED(false);
                     setRedLED(false);
                     Close();
+                }
+
+                else if (menuItem.Command == "etc")
+                {
+                    BlankForm f = new BlankForm();
+                    f.Show();
                 }
             }
         }
