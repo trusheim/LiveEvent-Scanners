@@ -10,8 +10,8 @@ namespace SU_MT2000_SUIDScanner
     class Processor
     {
         public static string eventName = "";
-        private const string InputFileName = "\\Application\\0-SUID\\admit-list.dat";
-        private const string OutputFileName = "\\Application\\0-SUID\\output-{0:ddd}-{0:HH}-{0:mm}.csv";
+        private const string InputFileName = "\\Application Data\\SU_MT2000_SUIDScanner\\admit-list.dat";
+        private const string OutputFileName = "\\Application Data\\SU_MT2000_SUIDScanner\\output-{0:ddd}-{0:HH}-{0:mm}.csv";
 
         public static SUIDs SUIDs = new SUIDs();
         public static Messages Messages = new Messages();
