@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SUID Scanning")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Stanford University - ASSU")]
+[assembly: AssemblyCompany("Stanford University - SAL")]
 [assembly: AssemblyProduct("Magnum")]
-[assembly: AssemblyCopyright("Copyright © 2011 Stephen Trusheim/SAL")]
+[assembly: AssemblyCopyright("Copyright © 2011-2012 Stephen Trusheim/SAL")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.2.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
 
