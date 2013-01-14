@@ -41,7 +41,7 @@ namespace SU_MT2000_SUIDScanner
 			// create the scanner services interface
 			if (!ScannerServicesClient.IsServiceRunning)
 			{
-				MsgBox.Show(null, Properties.Resources.StrScanInventory, Properties.Resources.StrErrorScannerServicesNotRunning);
+				MsgBox.Show(null, Properties.Resources.StrSUIDScanner, Properties.Resources.StrErrorCannotConnect);
 				return;
 			}
 			ScannerServicesClient = new ScannerServicesClient();
@@ -49,12 +49,12 @@ namespace SU_MT2000_SUIDScanner
             // Test connection..
 			if (!ScannerServicesClient.Connect(true))
 			{
-				MsgBox.Show(null, Properties.Resources.StrScanInventory, Properties.Resources.StrErrorCantStartScannerServices);
+				MsgBox.Show(null, Properties.Resources.StrSUIDScanner, Properties.Resources.StrErrorCannotConnect);
 				return;
 			}
 			if (RESULTCODE.E_OK != ScannerServicesClient.SetMode(SCANNERSVC_MODE.SVC_MODE_DECODE))
 			{
-				MsgBox.Show(null, Properties.Resources.StrScanInventory, Properties.Resources.StrErrorCantSetScannerServicesMode);
+				MsgBox.Show(null, Properties.Resources.StrSUIDScanner, Properties.Resources.StrErrorCannotConnect);
 				ScannerServicesClient.Disconnect();
 				ScannerServicesClient.Dispose();
 				return;

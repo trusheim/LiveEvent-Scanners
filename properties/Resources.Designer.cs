@@ -60,18 +60,18 @@ namespace SU_MT2000_SUIDScanner.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot connect to scanner services. Please try again..
         /// </summary>
-        internal static string StrErrorCantSetScannerServicesMode {
+        internal static string StrErrorCannotConnect {
             get {
-                return ResourceManager.GetString("StrErrorCantSetScannerServicesMode", resourceCulture);
+                return ResourceManager.GetString("StrErrorCannotConnect", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot connect to scanner services. Please try again..
+        ///   Looks up a localized string similar to SUID Scanning.
         /// </summary>
-        internal static string StrErrorCantStartScannerServices {
+        internal static string StrSUIDScanner {
             get {
-                return ResourceManager.GetString("StrErrorCantStartScannerServices", resourceCulture);
+                return ResourceManager.GetString("StrSUIDScanner", resourceCulture);
             }
         }
     }

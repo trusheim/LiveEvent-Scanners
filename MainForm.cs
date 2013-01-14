@@ -87,12 +87,12 @@ namespace SU_MT2000_SUIDScanner
 
             if (!Program.ScannerServicesClient.Connect(true))
             {
-                MsgBox.Show(null, Properties.Resources.StrScanInventory, "Could not connect to scanning services. Please try again.");
+                MsgBox.Show(null, Properties.Resources.StrSUIDScanner,Properties.Resources.StrErrorCannotConnect);
                 this.Close();
             }
             if (RESULTCODE.E_OK != Program.ScannerServicesClient.SetMode(SCANNERSVC_MODE.SVC_MODE_DECODE))
             {
-                MsgBox.Show(null, Properties.Resources.StrScanInventory, "Could not connect to scanning services. Please try again.");
+                MsgBox.Show(null, Properties.Resources.StrSUIDScanner, Properties.Resources.StrErrorCannotConnect);
                 Program.ScannerServicesClient.Disconnect();
                 Program.ScannerServicesClient.Dispose();
                 this.Close();

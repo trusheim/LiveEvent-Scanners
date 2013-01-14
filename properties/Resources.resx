@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="StrErrorCantSetScannerServicesMode" xml:space="preserve">
+  <data name="StrErrorCannotConnect" xml:space="preserve">
     <value>Cannot connect to scanner services. Please try again.</value>
   </data>
-  <data name="StrErrorCantStartScannerServices" xml:space="preserve">
-    <value>Cannot connect to scanner services. Please try again.</value>
+  <data name="StrSUIDScanner" xml:space="preserve">
+    <value>SUID Scanning</value>
   </data>
 </root>
