@@ -11,10 +11,7 @@ namespace SU_MT2000_SUIDScanner
 
         // UI features
         private MenuDataList menu = null;
-        private bool greenLEDOn = false;
-        private bool redLEDOn = false;
         private Timer clearTimer = null;
-        private Timer clearLEDTimer = null;
 
         // Label reading
         private delegate void ReadLabelEventDelegate(object sender, ReadLabelEventArgs e);
@@ -68,11 +65,6 @@ namespace SU_MT2000_SUIDScanner
             clearTimer.Tick += new EventHandler(clearTimer_Tick);
             clearTimer.Interval = 5000;
             clearTimer.Enabled = false;
-
-            clearLEDTimer = new Timer();
-            clearLEDTimer.Tick += new EventHandler(clearLEDTimer_Tick);
-            clearLEDTimer.Interval = 5000;
-            clearLEDTimer.Enabled = false;
 
             // Add event handlers. 
             this.Activated += new EventHandler(FormActivated);
@@ -136,7 +128,7 @@ namespace SU_MT2000_SUIDScanner
                     processor.Admit(e.LabelData.Text);
 
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SHORT_HI2);
-                    this.setGreenLED(true);
+                    LEDManager.ShowGreen();
                     this.DisplayAccess(messages[0], messages[1]);
                 }
                 else if (processor.IsRepeat(e.LabelData.Text))
@@ -144,19 +136,18 @@ namespace SU_MT2000_SUIDScanner
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_LO_HI_LO);
                     messages = processor.GetRepeatMessage();
                     this.DisplayDeny(messages[0], messages[1]);
-                    this.setRedLED(true);
+                    LEDManager.ShowRed();
                 }
                 else
                 {
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SLOW_WARB);
-                    this.setRedLED(true);
+                    LEDManager.ShowRed();
                     this.DisplayDeny(messages[0], messages[1]);
                 }
 
                 // set timeouts
                 this.clearTimer.Interval = 5000;
                 this.clearTimer.Enabled = true;
-                this.clearLEDTimer.Enabled = true;
             }
             else
             {
@@ -208,68 +199,6 @@ namespace SU_MT2000_SUIDScanner
             this.BackColor = System.Drawing.Color.White;
         }
 
-        private void clearLEDTimer_Tick(object sender, EventArgs e)
-        {
-            clearLEDTimer.Enabled = false;
-            setGreenLED(false);
-            setRedLED(false);
-        }
-
-        private void setGreenLED(bool newState)
-        {
-            clearLEDTimer.Enabled = false;
-            // it seems that the green LED automatically turns off?
-
-            //if (this.greenLEDOn == newState)
-            //{
-            //    return;
-            //}
-                if (newState)
-                {
-                    this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.SVC_UIF_GREEN_LED_ON);
-                } else {
-                    this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.SVC_UIF_GREEN_LED_OFF);
-                }
-
-            if (this.redLEDOn)
-            {
-                this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.SVC_UIF_RED_LED_OFF);
-            }
-
-            this.greenLEDOn = newState;
-            this.redLEDOn = false;
-
-            if (newState) this.clearLEDTimer.Enabled = true;
-        }
-
-        private void setRedLED(bool newState)
-        {
-            clearLEDTimer.Enabled = false;
-
-            if (this.redLEDOn == newState)
-            {
-                return;
-            }
-                if (newState)
-                {
-                    this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.SVC_UIF_RED_LED_ON);
-                }
-                else
-                {
-                    this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.SVC_UIF_RED_LED_OFF);
-                }
-
-            if (this.greenLEDOn)
-            {
-                this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.SVC_UIF_GREEN_LED_OFF);
-            }
-
-            this.redLEDOn = newState;
-            this.greenLEDOn = false;
-
-            if (newState) this.clearLEDTimer.Enabled = true;
-        }
-
         /// <summary>
         /// clears the barcode
         /// </summary>
@@ -302,8 +231,6 @@ namespace SU_MT2000_SUIDScanner
                 {
                     Save();
                     clearDisplay();
-                    setGreenLED(false);
-                    setRedLED(false);
                     Close();
                 }
 

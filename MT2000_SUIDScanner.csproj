@@ -71,6 +71,7 @@
     <Compile Include="BlankForm.Designer.cs">
       <DependentUpon>BlankForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LEDManager.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="SelectScreen.cs" />
