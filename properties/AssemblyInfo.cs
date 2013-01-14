@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Stanford University - SAL")]
-[assembly: AssemblyProduct("Magnum")]
-[assembly: AssemblyCopyright("Copyright © 2011-2012 Stephen Trusheim/SAL")]
+[assembly: AssemblyProduct("SUIDScanner")]
+[assembly: AssemblyCopyright("Copyright © 2011-2013 Stephen Trusheim/SAL")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
