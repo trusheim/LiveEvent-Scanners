@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CardProcessor.cs" />
     <Compile Include="BlankForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,7 +74,8 @@
     </Compile>
     <Compile Include="LEDManager.cs" />
     <Compile Include="Message.cs" />
-    <Compile Include="Processor.cs" />
+    <Compile Include="AdmitList.cs" />
+    <Compile Include="ScanLog.cs" />
     <Compile Include="SelectScreen.cs" />
     <Compile Include="SUID.cs" />
     <Compile Include="MainForm.cs">

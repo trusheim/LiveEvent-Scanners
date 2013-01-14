@@ -18,7 +18,9 @@ namespace SU_MT2000_SUIDScanner
         private ReadLabelEventDelegate readLabelEvent = null;
 
         // ID processor
-        private Processor processor = null;
+        private CardProcessor processor = null;
+        private ScanLog scanLog = null;
+
         private bool forceMode = false;
         private bool allAccessMode = false;
 
@@ -34,8 +36,8 @@ namespace SU_MT2000_SUIDScanner
             // ID processor framework
             try
             {
-                processor = new Processor();
-                processor.Load();
+                processor = new CardProcessor();
+                AdmitList.SetupProcessorFromFile("lol", processor);
             }
             catch (Exception e)
             {
@@ -60,7 +62,7 @@ namespace SU_MT2000_SUIDScanner
             
             readLabelEvent = new ReadLabelEventDelegate(ReadLabelEventCallback);
 
-            // Timers: display timer and LED timer
+            // Display timer
             clearTimer = new Timer();
             clearTimer.Tick += new EventHandler(clearTimer_Tick);
             clearTimer.Interval = 5000;
@@ -100,6 +102,7 @@ namespace SU_MT2000_SUIDScanner
             // start an asynchronous scanner read
             this.scannerServices.BeginReadLabel();
         }
+
         private void FormDeactivated(object sender, EventArgs e)
         {
             clearDisplay();
@@ -122,27 +125,26 @@ namespace SU_MT2000_SUIDScanner
 
             if (e.Result == RESULTCODE.E_OK)
             {
-                string[] messages = processor.GetMessages(e.LabelData.Text);
-                if (processor.ShouldAdmit(e.LabelData.Text) && !processor.IsRepeat(e.LabelData.Text))
-                {
-                    processor.Admit(e.LabelData.Text);
+                string barcode_id = e.LabelData.Text;
+                AdmitInfo admitInfo = processor.TryAdmit(barcode_id);
 
+                if (admitInfo.status == AdmitStatus.OKAY)
+                {
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SHORT_HI2);
                     LEDManager.ShowGreen();
-                    this.DisplayAccess(messages[0], messages[1]);
+                    this.DisplayAccess(admitInfo.message.big_message, admitInfo.message.small_message);
                 }
-                else if (processor.IsRepeat(e.LabelData.Text))
+                else if (admitInfo.status == AdmitStatus.REPEAT)
                 {
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_LO_HI_LO);
-                    messages = processor.GetRepeatMessage();
-                    this.DisplayDeny(messages[0], messages[1]);
                     LEDManager.ShowRed();
+                    this.DisplayDeny(admitInfo.message.big_message, admitInfo.message.small_message);
                 }
                 else
                 {
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SLOW_WARB);
                     LEDManager.ShowRed();
-                    this.DisplayDeny(messages[0], messages[1]);
+                    this.DisplayDeny(admitInfo.message.big_message,admitInfo.message.small_message);
                 }
 
                 // set timeouts
@@ -245,7 +247,8 @@ namespace SU_MT2000_SUIDScanner
         private void Save()
         {
             this.ShowSpinner = true;
-            bool ok = Processor.Save();
+            bool ok = false; // used to be the .Save() action
+            //TODO: fix and add back in if necessary
             this.ShowSpinner = false;
             if (ok)
             {

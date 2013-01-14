@@ -18,18 +18,18 @@ namespace SU_MT2000_SUIDScanner
     {
         public string id = "";
         public bool over_21 = false;
-        public bool admit_flag = false;
-        public Flags flags = 0;
+        public bool admit = false;
+        public Flags flags = Flags.NONE;
         public short messageId = 0;
-        public DateTime admit_time = DateTime.Now;
+        public DateTime admit_time = DateTime.MinValue;
+        public bool admitted = false;
 
 
-        public SUID(string barcode_id, bool over_21, bool admit_flag, Flags flags, short messageId)
+        public SUID(string barcode_id, bool over_21, bool admit, short messageId)
         {
             this.id = barcode_id;
             this.over_21 = over_21;
-            this.admit_flag = admit_flag;
-            this.flags = flags;
+            this.admit = admit;
             this.messageId = messageId;
         }
 
