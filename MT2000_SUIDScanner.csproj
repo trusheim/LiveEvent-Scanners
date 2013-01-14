@@ -17,7 +17,7 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FormFactorID>
     </FormFactorID>
-    <ApplicationIcon>ScanInventory.ico</ApplicationIcon>
+    <ApplicationIcon>ScanSUID.ico</ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -94,11 +94,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Images\Inventory.bmp" />
     <EmbeddedResource Include="Resources\Images\Transmit.bmp" />
-    <Content Include="ScanInventory.ico" />
+    <Content Include="ScanSUID.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
   <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
