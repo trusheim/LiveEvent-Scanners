@@ -14,6 +14,8 @@ namespace SU_MT2000_SUIDScanner
         public string EventName = "";
         public bool EnableScanLog = false;
 
+        public static TimeSpan REPEAT_OK_TIME = new TimeSpan(0, 0, 30);
+
         protected SUIDs SUIDs = new SUIDs();
         protected Messages Messages = new Messages();
 
@@ -36,6 +38,12 @@ namespace SU_MT2000_SUIDScanner
         }
         #endregion
 
+        #region Public Methods
+        /// <summary>
+        /// Returns true if the supplied barcode_id has the "admit" flag set to true.
+        /// </summary>
+        /// <param name="barcode_id"></param>
+        /// <returns></returns>
         public bool ShouldAdmit(string barcode_id)
         {
             if (SUIDs.ContainsKey(barcode_id) && SUIDs[barcode_id].admit)
@@ -45,6 +53,11 @@ namespace SU_MT2000_SUIDScanner
             return false;
         }
 
+        /// <summary>
+        /// Updates the supplied barcode_id to reflect admission at DateTime.Now. Also logs the admission if
+        /// the scan log is enabled.
+        /// </summary>
+        /// <param name="barcode_id"></param>
         public void DoAdmit(string barcode_id)
         {
             if (SUIDs.ContainsKey(barcode_id))
@@ -56,6 +69,12 @@ namespace SU_MT2000_SUIDScanner
             LogAdmit(barcode_id);
         }
 
+        /// <summary>
+        /// Attempts to admit the person, or returns an appropriate error message. This is the main method
+        /// for most applications that don't have special requirements.
+        /// </summary>
+        /// <param name="barcode_id"></param>
+        /// <returns></returns>
         public AdmitInfo TryAdmit(string barcode_id)
         {
             AdmitInfo info = new AdmitInfo();
@@ -78,15 +97,27 @@ namespace SU_MT2000_SUIDScanner
             return info;
         }
 
+        /// <summary>
+        /// Returns true if the ID was scanned already, and if that scan was more than REPEAT_OK_TIME ago.
+        /// </summary>
+        /// <param name="barcode_id"></param>
+        /// <returns></returns>
         public bool IsRepeat(string barcode_id)
         {
-            if (SUIDs.ContainsKey(barcode_id) && SUIDs[barcode_id].admit_time < DateTime.Now.Subtract(new TimeSpan(0, 0, 30)))
+            if (SUIDs.ContainsKey(barcode_id) && SUIDs[barcode_id].admit_time < DateTime.Now.Subtract(REPEAT_OK_TIME))
             {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Returns the message that is appropriate for this ID according to the SUIDs list. Does not
+        /// return a repeat message if the ID has already been scanned. Will return Message.InvalidMessage
+        /// if the barcode_id is not in the SUIDs list.
+        /// </summary>
+        /// <param name="barcode_id"></param>
+        /// <returns></returns>
         public Message GetMessage(string barcode_id)
         {
             if (!SUIDs.ContainsKey(barcode_id))
@@ -104,6 +135,7 @@ namespace SU_MT2000_SUIDScanner
             Message message = Messages[SUIDs[barcode_id].messageId];
             return message;
         }
+        #endregion
 
         protected void LogAdmit(string barcode_id)
         {
