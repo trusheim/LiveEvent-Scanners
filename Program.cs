@@ -60,7 +60,7 @@ namespace SU_MT2000_SUIDScanner
 				return;
 			}
 
-            ScannerServicesClient.Disconnect(); 
+            ScannerServicesClient.Disconnect();
 
 			// run the application
 			SystemMonitor.Start();

@@ -35,8 +35,17 @@ namespace SU_MT2000_SUIDScanner
             this.scannerServices = Program.ScannerServicesClient;
 
             // ID processor framework
-            processor = new Processor();
-            processor.Load();
+            try
+            {
+                processor = new Processor();
+                processor.Load();
+            }
+            catch (Exception e)
+            {
+                MsgBox.Error(null, e.Message);
+                this.Close();
+                return;
+            }
 
             // initalize UI
 			InitializeComponent();
@@ -70,6 +79,7 @@ namespace SU_MT2000_SUIDScanner
 
             this.LeftSoftKeyPressed += new System.EventHandler(this.LeftSoftKeyPressedHandler);
             this.RightSoftKeyPressed += new System.EventHandler(this.RightSoftKeyPressedHandler);
+            this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_APP_CLICK);
 		}
 
         private void FormActivated(object sender, EventArgs e)
@@ -77,12 +87,12 @@ namespace SU_MT2000_SUIDScanner
 
             if (!Program.ScannerServicesClient.Connect(true))
             {
-                MsgBox.Show(null, Properties.Resources.StrScanInventory, Properties.Resources.StrErrorCantStartScannerServices);
+                MsgBox.Show(null, Properties.Resources.StrScanInventory, "Could not connect to scanning services. Please try again.");
                 this.Close();
             }
             if (RESULTCODE.E_OK != Program.ScannerServicesClient.SetMode(SCANNERSVC_MODE.SVC_MODE_DECODE))
             {
-                MsgBox.Show(null, Properties.Resources.StrScanInventory, Properties.Resources.StrErrorCantSetScannerServicesMode);
+                MsgBox.Show(null, Properties.Resources.StrScanInventory, "Could not connect to scanning services. Please try again.");
                 Program.ScannerServicesClient.Disconnect();
                 Program.ScannerServicesClient.Dispose();
                 this.Close();
@@ -119,27 +129,27 @@ namespace SU_MT2000_SUIDScanner
 
             if (e.Result == RESULTCODE.E_OK)
             {
-                if (processor.ShouldAdmit(e.LabelData.Text))
+                string[] messages = processor.GetMessages(e.LabelData.Text);
+                if (processor.ShouldAdmit(e.LabelData.Text) && !processor.IsRepeat(e.LabelData.Text))
                 {
                     processor.Admit(e.LabelData.Text);
 
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SHORT_HI2);
                     this.setGreenLED(true);
-                    this.DisplayAccess(false);
+                    this.DisplayAccess(messages[0], messages[1]);
                 }
-                else if (forceMode == true)
+                else if (processor.IsRepeat(e.LabelData.Text))
                 {
-                    ToggleForceMode();
-                    processor.Admit(e.LabelData.Text);
-                    this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SHORT_HI2);
-                    this.setGreenLED(true);
-                    this.DisplayAccess(true);
+                    this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_LO_HI_LO);
+                    messages = processor.GetRepeatMessage();
+                    this.DisplayDeny(messages[0], messages[1]);
+                    this.setRedLED(true);
                 }
                 else
                 {
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SLOW_WARB);
                     this.setRedLED(true);
-                    this.DisplayDeny(processor.GetDenyCode(e.LabelData.Text));
+                    this.DisplayDeny(messages[0], messages[1]);
                 }
 
                 // set timeouts
@@ -149,85 +159,42 @@ namespace SU_MT2000_SUIDScanner
             }
             else
             {
-                MsgBox.Error(this, "Could not read SUID");
+                MsgBox.Error(this, "Barcode could not be scanned.");
             }
 
             // start another read
             Program.ScannerServicesClient.BeginReadLabel();
         }
 
-        private void DisplayAccess(bool forcedAdmit)
+        private void DisplayAccess(string bigMessage, string smallMessage)
         {
             this.PleaseScanLabel.Visible = false;
-            this.StopLabel.Visible = false;
-            this.GoLabel.Visible = true;
-            if (!forcedAdmit)
+            if (bigMessage == "GO")
             {
-                this.MoreInfo.Text = "ID is valid and invited.";
+                this.BigLabel.Visible = false;
+                this.GoLabel.Visible = true;
             }
             else
             {
-                this.MoreInfo.Text = "ID is now invited.";
+                this.GoLabel.Visible = false;
+                this.BigLabel.Text = bigMessage;
+                this.BigLabel.Visible = true;
             }
-            this.MoreInfo.Visible = true;
+
+            this.SmallInfo.Text = smallMessage;
+            this.SmallInfo.Visible = true;
             this.BackColor = System.Drawing.Color.Green;
         }
 
-        private void DisplayDeny(AdmitFlags message) 
+        private void DisplayDeny(string big_message, string small_message)
         {
             this.PleaseScanLabel.Visible = false;
             this.GoLabel.Visible = false;
-            this.StopLabel.Visible = true;
-            if (message == AdmitFlags.ERR_NOT_ID)
-            {
-                this.MoreInfo.Text = "Not recognized as student ID";
-            }
-            else if (message == AdmitFlags.ERR_EPGY)
-            {
-                this.MoreInfo.Text = "INVALID ID - HSSC/EPGY ID";
-            }
-            else if (message == AdmitFlags.ERR_ALUMNI)
-            {
-                this.MoreInfo.Text = "INVALID ID - Alumni ID";
-            }
-            else if (message == AdmitFlags.ERR_ONLEAVE)
-            {
-                this.MoreInfo.Text = "Student on leave (ID is valid)";
-            }
-            else if (message == AdmitFlags.ERR_NOT_INVITED)
-            {
-                this.MoreInfo.Text = "Not invited (ID is valid)";
-            }
-            
-            else if (message == AdmitFlags.ERR_SENIORNOWAIVER)
-            {
-                this.MoreInfo.Text = "SENIOR - no waiver";
-            }
-            else if (message == AdmitFlags.ERR_FRESHMAN)
-            {
-                this.MoreInfo.Text = "FRESHMAN";
-            }
-            else if (message == AdmitFlags.ERR_SOPHOMORE)
-            {
-                this.MoreInfo.Text = "SOPHOMORE";
-            }
-            else if (message == AdmitFlags.ERR_JUNIOR)
-            {
-                this.MoreInfo.Text = "JUNIOR";
-            }
-            else if (message == AdmitFlags.ERR_SENIOR)
-            {
-                this.MoreInfo.Text = "SENIOR";
-            }
-            else if (message == AdmitFlags.ERR_GRAD)
-            {
-                this.MoreInfo.Text = "GRAD STUDENT";
-            }
-            else
-            {
-                this.MoreInfo.Text = "Unknown error";
-            }
-            this.MoreInfo.Visible = true;
+            this.BigLabel.Text = big_message;
+            this.BigLabel.Visible = true;
+
+            this.SmallInfo.Text = small_message;
+            this.SmallInfo.Visible = true;
             this.BackColor = System.Drawing.Color.Red;
         }
 
@@ -235,8 +202,8 @@ namespace SU_MT2000_SUIDScanner
         {
             this.PleaseScanLabel.Visible = true;
             this.GoLabel.Visible = false;
-            this.StopLabel.Visible = false;
-            this.MoreInfo.Visible = false;
+            this.BigLabel.Visible = false;
+            this.SmallInfo.Visible = false;
             this.BackColor = System.Drawing.Color.White;
         }
 

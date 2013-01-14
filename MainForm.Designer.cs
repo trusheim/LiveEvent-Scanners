@@ -1,6 +1,6 @@
 namespace SU_MT2000_SUIDScanner
 {
-	partial class MainForm
+    partial class MainForm : Symbol.MT2000.UserInterface.BaseForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -30,13 +30,13 @@ namespace SU_MT2000_SUIDScanner
 		{
             this.PleaseScanLabel = new System.Windows.Forms.Label();
             this.GoLabel = new System.Windows.Forms.Label();
-            this.MoreInfo = new System.Windows.Forms.Label();
-            this.StopLabel = new System.Windows.Forms.Label();
+            this.SmallInfo = new System.Windows.Forms.Label();
+            this.BigLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // PleaseScanLabel
             // 
-            this.PleaseScanLabel.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold);
+            this.PleaseScanLabel.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold);
             this.PleaseScanLabel.Location = new System.Drawing.Point(29, 104);
             this.PleaseScanLabel.Name = "PleaseScanLabel";
             this.PleaseScanLabel.Size = new System.Drawing.Size(263, 32);
@@ -53,33 +53,33 @@ namespace SU_MT2000_SUIDScanner
             this.GoLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.GoLabel.Visible = false;
             // 
-            // MoreInfo
+            // SmallInfo
             // 
-            this.MoreInfo.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Regular);
-            this.MoreInfo.Location = new System.Drawing.Point(0, 150);
-            this.MoreInfo.Name = "MoreInfo";
-            this.MoreInfo.Size = new System.Drawing.Size(320, 53);
-            this.MoreInfo.Text = "More information";
-            this.MoreInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.MoreInfo.Visible = false;
+            this.SmallInfo.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Regular);
+            this.SmallInfo.Location = new System.Drawing.Point(0, 150);
+            this.SmallInfo.Name = "SmallInfo";
+            this.SmallInfo.Size = new System.Drawing.Size(320, 53);
+            this.SmallInfo.Text = "More information";
+            this.SmallInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.SmallInfo.Visible = false;
             // 
-            // StopLabel
+            // BigLabel
             // 
-            this.StopLabel.Font = new System.Drawing.Font("Arial", 72F, System.Drawing.FontStyle.Bold);
-            this.StopLabel.Location = new System.Drawing.Point(3, 14);
-            this.StopLabel.Name = "StopLabel";
-            this.StopLabel.Size = new System.Drawing.Size(317, 136);
-            this.StopLabel.Text = "STOP";
-            this.StopLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.StopLabel.Visible = false;
+            this.BigLabel.Font = new System.Drawing.Font("Arial", 54F, System.Drawing.FontStyle.Bold);
+            this.BigLabel.Location = new System.Drawing.Point(0, 33);
+            this.BigLabel.Name = "BigLabel";
+            this.BigLabel.Size = new System.Drawing.Size(320, 117);
+            this.BigLabel.Text = "BigInfo";
+            this.BigLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.BigLabel.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.GhostWhite;
             this.ClientSize = new System.Drawing.Size(320, 240);
-            this.Controls.Add(this.StopLabel);
-            this.Controls.Add(this.MoreInfo);
+            this.Controls.Add(this.BigLabel);
+            this.Controls.Add(this.SmallInfo);
             this.Controls.Add(this.GoLabel);
             this.Controls.Add(this.PleaseScanLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -92,8 +92,8 @@ namespace SU_MT2000_SUIDScanner
 
         private System.Windows.Forms.Label PleaseScanLabel;
         private System.Windows.Forms.Label GoLabel;
-        private System.Windows.Forms.Label MoreInfo;
-        private System.Windows.Forms.Label StopLabel;
+        private System.Windows.Forms.Label SmallInfo;
+        private System.Windows.Forms.Label BigLabel;
 
     }
 }

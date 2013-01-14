@@ -6,43 +6,38 @@ using System.Text;
 namespace SU_MT2000_SUIDScanner
 {
 
-    enum AdmitFlags : short
-    {
-        ADMIT = -1,
-        ERR_NOT_INVITED = 10,
-        ERR_NOT_ID = 1,
-        ERR_EPGY = 2,
-        ERR_ALUMNI = 3,
-        ERR_UNDER21 = 11,
-        ERR_ONLEAVE = 12,
-        ERR_SENIORNOWAIVER = 20,
-        ERR_FRESHMAN = 30,
-        ERR_SOPHOMORE = 31,
-        ERR_JUNIOR = 32,
-        ERR_SENIOR = 33,
-        ERR_GRAD = 34
-    }
-
     enum Flags : short 
     {
         NONE = 0,
-        FORCE_CHECKED = 1
+        UNRECOGNIZED = 1,
+        FORCED = 2,
+        REPEAT = 3
     }
 
     class SUID
     {
         public string id = "";
-        //public bool is_21 = true; // TODO: Add is_21 flag
-        public AdmitFlags admit_flag = 0;
+        public bool over_21 = false;
+        public bool admit_flag = false;
         public Flags flags = 0;
-        public bool admitted = false;
+        public short messageId = 0;
+        public DateTime admit_time = DateTime.Now;
 
-        public SUID(string barcode_id, AdmitFlags admit_flag, Flags flags)
+
+        public SUID(string barcode_id, bool over_21, bool admit_flag, Flags flags, short messageId)
         {
             this.id = barcode_id;
+            this.over_21 = over_21;
             this.admit_flag = admit_flag;
             this.flags = flags;
+            this.messageId = messageId;
         }
+
+        public void setAdmitTime(DateTime admit_time)
+        {
+            this.admit_time = admit_time;
+        }
+
     }
 
     class SUIDs : SortedList<string,SUID> { }
