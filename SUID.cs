@@ -10,7 +10,7 @@ namespace SU_MT2000_SUIDScanner
     {
         NONE = 0,
         UNRECOGNIZED = 1,
-        FORCED = 2,
+        FOLLOWUP = 2,
         REPEAT = 3
     }
 
