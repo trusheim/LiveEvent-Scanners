@@ -26,7 +26,8 @@ namespace SU_MT2000_SUIDScanner
 
         ScannerServicesClient scannerServices;
 
-		/// <summary>
+        #region Constructors/Destructors
+        /// <summary>
 		/// initializes the form
 		/// </summary>
 		public MainForm()
@@ -110,7 +111,9 @@ namespace SU_MT2000_SUIDScanner
             this.scannerServices.Attributes.System.BeepOnGoodDecode.Value = true;
             Program.ScannerServicesClient.Disconnect();
         }
+        #endregion
 
+        #region Scanning Actions
         /// <summary>
         /// receives and sends the scanner data
         /// </summary>
@@ -210,7 +213,9 @@ namespace SU_MT2000_SUIDScanner
             clearTimer.Enabled = false;
             clearDisplay();
         }
+        #endregion
 
+        #region Other interaction
         private void LeftSoftKeyPressedHandler(object sender, EventArgs e) 
         {
             menu.SelectedItemIndex = 0;
@@ -278,6 +283,6 @@ namespace SU_MT2000_SUIDScanner
                 this.HighlightRightSoftKey = false;
             }
         }
-
-	}
+        #endregion
+    }
 }
