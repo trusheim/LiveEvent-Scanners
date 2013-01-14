@@ -16,6 +16,7 @@ namespace SU_MT2000_SUIDScanner
     /// </summary>
     class LEDManager
     {
+        #region Singleton setup
         private static LEDManager instance;
         public static LEDManager Instance
         {
@@ -28,7 +29,9 @@ namespace SU_MT2000_SUIDScanner
                 return instance;
             }
         }
+        #endregion
 
+        #region Public methods
         public static void ShowRed() {
             ShowRed(-1);
         }
@@ -54,7 +57,9 @@ namespace SU_MT2000_SUIDScanner
             }
             thisManager.SetGreenLED(true);
         }
+        #endregion
 
+        #region Instance methods
         protected ScannerServicesClient scannerServices;
         protected bool greenLEDOn = false;
         protected bool redLEDOn = false;
@@ -145,5 +150,6 @@ namespace SU_MT2000_SUIDScanner
         {
             this.clearLEDTimer.Interval = milliseconds;
         }
+        #endregion
     }
 }
