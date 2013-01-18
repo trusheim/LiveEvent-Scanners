@@ -71,7 +71,8 @@ namespace SU_MT2000_SUIDScanner
         protected LEDManager()
         {
             this.scannerServices = Program.ScannerServicesClient;
-            if (!this.scannerServices.Connect(false))
+
+            if (!this.scannerServices.IsConnected)
             {
                 throw new Exception("Cannot connect to scanner services, failed!");
             }

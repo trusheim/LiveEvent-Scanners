@@ -16,10 +16,13 @@ namespace SU_MT2000_SUIDScanner
         // Label reading
         private delegate void ReadLabelEventDelegate(object sender, ReadLabelEventArgs e);
         private ReadLabelEventDelegate readLabelEvent = null;
+        private ScannerServicesClient.ReadLabelHandler RLHandler;
 
         // ID processor
+        public static string admit_file = null;
+        public static bool admit_processed = false;
+        private bool in_processing = false;
         private CardProcessor processor = null;
-        private ScanLog scanLog = null;
 
         private bool forceMode = false;
         private bool allAccessMode = false;
@@ -33,19 +36,6 @@ namespace SU_MT2000_SUIDScanner
 		public MainForm()
 		{
             this.scannerServices = Program.ScannerServicesClient;
-
-            // ID processor framework
-            try
-            {
-                processor = new CardProcessor();
-                AdmitList.SetupProcessorFromFile("lol", processor);
-            }
-            catch (Exception e)
-            {
-                MsgBox.Error(null, e.Message);
-                this.Close();
-                return;
-            }
 
             // initalize UI
 			InitializeComponent();
@@ -62,6 +52,10 @@ namespace SU_MT2000_SUIDScanner
             menu.Add(new MenuDataItem("Etc", "etc", null, Config.CloseBitmap));
             
             readLabelEvent = new ReadLabelEventDelegate(ReadLabelEventCallback);
+            RLHandler = new ScannerServicesClient.ReadLabelHandler(this.ReadLabelEventCallback);
+
+            this.LeftSoftKeyPressed += new System.EventHandler(this.LeftSoftKeyPressedHandler);
+            this.RightSoftKeyPressed += new System.EventHandler(this.RightSoftKeyPressedHandler);
 
             // Display timer
             clearTimer = new Timer();
@@ -72,44 +66,61 @@ namespace SU_MT2000_SUIDScanner
             // Add event handlers. 
             this.Activated += new EventHandler(FormActivated);
             this.Deactivate += new EventHandler(FormDeactivated);
-
-            this.LeftSoftKeyPressed += new System.EventHandler(this.LeftSoftKeyPressedHandler);
-            this.RightSoftKeyPressed += new System.EventHandler(this.RightSoftKeyPressedHandler);
-            this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_APP_CLICK);
 		}
 
         private void FormActivated(object sender, EventArgs e)
         {
-
-            if (!Program.ScannerServicesClient.Connect(true))
-            {
-                MsgBox.Show(null, Properties.Resources.StrSUIDScanner,Properties.Resources.StrErrorCannotConnect);
-                this.Close();
-            }
-            if (RESULTCODE.E_OK != Program.ScannerServicesClient.SetMode(SCANNERSVC_MODE.SVC_MODE_DECODE))
-            {
-                MsgBox.Show(null, Properties.Resources.StrSUIDScanner, Properties.Resources.StrErrorCannotConnect);
-                Program.ScannerServicesClient.Disconnect();
-                Program.ScannerServicesClient.Dispose();
-                this.Close();
-            }
-
-            // Attach it to the ReadLabelEvent property
-            this.scannerServices.ReadLabelEvent += new ScannerServicesClient.ReadLabelHandler(this.ReadLabelEventCallback);
+            // Attach the processing to the ReadLabelEvent property
+            this.scannerServices.ReadLabelEvent -= RLHandler;
+            this.scannerServices.ReadLabelEvent += RLHandler;
 
             // set scanner modes
             this.scannerServices.Attributes.System.BeepOnGoodDecode.Value = false;
 
             // start an asynchronous scanner read
             this.scannerServices.BeginReadLabel();
+
+            if (admit_processed == false)
+            {
+                SetupAdmitList();
+            }
         }
 
         private void FormDeactivated(object sender, EventArgs e)
         {
             clearDisplay();
-            Program.ScannerServicesClient.ReadLabelEvent -= new ScannerServicesClient.ReadLabelHandler(this.ReadLabelEventCallback);
+            Program.ScannerServicesClient.ReadLabelEvent -= RLHandler;
             this.scannerServices.Attributes.System.BeepOnGoodDecode.Value = true;
-            Program.ScannerServicesClient.Disconnect();
+            this.scannerServices.CancelReadLabel();
+            
+        }
+
+        public static void ChangeAdmitListFile(string newFile)
+        {
+            admit_file = newFile;
+            admit_processed = false;
+        }
+
+        protected void SetupAdmitList()
+        {
+            if (in_processing) return;
+
+            in_processing = true;
+            // setup which file to use
+            // show selection window for file (dectivates this window)
+            SelectForm sForm = new SelectForm();
+            sForm.ShowDialog();
+
+            this.ShowSpinner = true;
+            processor = new CardProcessor();
+            AdmitList.SetupProcessorFromFile(MainForm.admit_file, processor);
+            this.ShowSpinner = false;
+
+            // alert that we are done!
+            this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_APP_CLICK);
+
+            admit_processed = true;
+            in_processing = false;
         }
         #endregion
 
@@ -123,6 +134,11 @@ namespace SU_MT2000_SUIDScanner
             if (this.InvokeRequired)
             {
                 this.Invoke(readLabelEvent, sender, e);
+                return;
+            }
+
+            if (MainForm.admit_processed == false)
+            {
                 return;
             }
 
@@ -160,7 +176,7 @@ namespace SU_MT2000_SUIDScanner
             }
 
             // start another read
-            Program.ScannerServicesClient.BeginReadLabel();
+            this.scannerServices.BeginReadLabel();
         }
 
         private void DisplayAccess(string bigMessage, string smallMessage)
@@ -243,7 +259,7 @@ namespace SU_MT2000_SUIDScanner
 
                 else if (menuItem.Command == "etc")
                 {
-                    BlankForm f = new BlankForm();
+                    SelectForm f = new SelectForm();
                     f.Show();
                 }
             }

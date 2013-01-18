@@ -6,14 +6,14 @@ using Symbol.MT2000.ScannerServices;
 
 namespace SU_MT2000_SUIDScanner
 {
-    public partial class BlankForm : Symbol.MT2000.UserInterface.ListForm
+    public partial class SelectForm : Symbol.MT2000.UserInterface.ListForm
     {
         /// <summary>
         /// initializes the form
         /// </summary>
-        public BlankForm()
+        public SelectForm()
         {
-            // initialize the controls
+            // initialize the controls 
             InitializeComponent();
             Application.DoEvents();
 

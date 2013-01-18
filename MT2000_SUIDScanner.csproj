@@ -66,11 +66,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardProcessor.cs" />
-    <Compile Include="BlankForm.cs">
+    <Compile Include="SelectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BlankForm.Designer.cs">
-      <DependentUpon>BlankForm.cs</DependentUpon>
+    <Compile Include="SelectForm.Designer.cs">
+      <DependentUpon>SelectForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LEDManager.cs" />
     <Compile Include="Message.cs" />

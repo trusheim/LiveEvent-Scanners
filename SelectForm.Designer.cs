@@ -1,6 +1,6 @@
 ﻿namespace SU_MT2000_SUIDScanner
 {
-    partial class BlankForm
+    partial class SelectForm
     {
         /// <summary>
         /// Required designer variable.

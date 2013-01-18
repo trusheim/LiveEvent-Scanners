@@ -20,22 +20,29 @@ namespace SU_MT2000_SUIDScanner
         public override void Show()
         {
             listForm.TitleText = "Select Event";
+            listForm.LeftSoftKeyText = "";
+            listForm.RightSoftKeyText = "";
+
+            AdmitListInfo[] infos = AdmitList.GetAllAdmitLists();
 
             items = new ScrollableListItems();
-            items.Add(new ScrollableListItem("asd",null,null,"asd"));
-            items.Add(new ScrollableListItem("asd2", null, null, "asd2"));
+            foreach (AdmitListInfo info in infos)
+            {
+                items.Add(new ScrollableListItem(info.eventName, null, null, info.filePath));
+            }
 
             listForm.List.Items = items;
+
         }
 
         public override ListScreen ExecuteListItem(ScrollableListItem item)
         {
             if (item != null)
             {
-                MsgBox.Show(listForm, "yep!", "selected " + (String)item.Tag);
+                MainForm.ChangeAdmitListFile(item.Tag.ToString());
             }
 
-            // stay on this screen
+            // return back to the other form
             listForm.Close();
             return this;
         }

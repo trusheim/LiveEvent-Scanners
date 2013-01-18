@@ -52,8 +52,6 @@ namespace SU_MT2000_SUIDScanner
 				return;
 			}
 
-            ScannerServicesClient.Disconnect();
-
 			// run the application
 			SystemMonitor.Start();
 			Application.Run(new MainForm());
@@ -70,5 +68,10 @@ namespace SU_MT2000_SUIDScanner
 				ScannerServicesClient = null;
 			}
 		}
+
+        static void Test()
+        {
+            AdmitList.GetAllAdmitLists();
+        }
 	}
 }
