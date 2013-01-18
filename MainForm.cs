@@ -26,6 +26,7 @@ namespace SU_MT2000_SUIDScanner
 
         private bool forceMode = false;
         private bool allAccessMode = false;
+        private int numAdmitted = 0;
 
         ScannerServicesClient scannerServices;
 
@@ -119,6 +120,7 @@ namespace SU_MT2000_SUIDScanner
             // alert that we are done!
             this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_APP_CLICK);
 
+            this.numAdmitted = 0;
             admit_processed = true;
             in_processing = false;
         }
@@ -152,6 +154,7 @@ namespace SU_MT2000_SUIDScanner
                     this.scannerServices.ExecuteUIFCommand(UIF_COMMAND.BC_SHORT_HI2);
                     LEDManager.ShowGreen();
                     this.DisplayAccess(admitInfo.message.big_message, admitInfo.message.small_message);
+                    this.numAdmitted += 1;
                 }
                 else if (admitInfo.status == AdmitStatus.REPEAT)
                 {
@@ -182,6 +185,7 @@ namespace SU_MT2000_SUIDScanner
         private void DisplayAccess(string bigMessage, string smallMessage)
         {
             this.PleaseScanLabel.Visible = false;
+            this.numIn.Visible = false;
             if (bigMessage == "GO")
             {
                 this.BigLabel.Visible = false;
@@ -203,6 +207,7 @@ namespace SU_MT2000_SUIDScanner
         {
             this.PleaseScanLabel.Visible = false;
             this.GoLabel.Visible = false;
+            this.numIn.Visible = false;
             this.BigLabel.Text = big_message;
             this.BigLabel.Visible = true;
 
@@ -214,6 +219,9 @@ namespace SU_MT2000_SUIDScanner
         private void clearDisplay()
         {
             this.PleaseScanLabel.Visible = true;
+            this.numIn.Visible = true;
+            this.numIn.Text = this.numAdmitted.ToString();
+
             this.GoLabel.Visible = false;
             this.BigLabel.Visible = false;
             this.SmallInfo.Visible = false;

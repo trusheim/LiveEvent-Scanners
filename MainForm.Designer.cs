@@ -32,6 +32,7 @@ namespace SU_MT2000_SUIDScanner
             this.GoLabel = new System.Windows.Forms.Label();
             this.SmallInfo = new System.Windows.Forms.Label();
             this.BigLabel = new System.Windows.Forms.Label();
+            this.numIn = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // PleaseScanLabel
@@ -73,11 +74,21 @@ namespace SU_MT2000_SUIDScanner
             this.BigLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.BigLabel.Visible = false;
             // 
+            // numIn
+            // 
+            this.numIn.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular);
+            this.numIn.Location = new System.Drawing.Point(222, 157);
+            this.numIn.Name = "numIn";
+            this.numIn.Size = new System.Drawing.Size(98, 53);
+            this.numIn.Text = "0";
+            this.numIn.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.GhostWhite;
             this.ClientSize = new System.Drawing.Size(320, 240);
+            this.Controls.Add(this.numIn);
             this.Controls.Add(this.BigLabel);
             this.Controls.Add(this.SmallInfo);
             this.Controls.Add(this.GoLabel);
@@ -94,6 +105,7 @@ namespace SU_MT2000_SUIDScanner
         private System.Windows.Forms.Label GoLabel;
         private System.Windows.Forms.Label SmallInfo;
         private System.Windows.Forms.Label BigLabel;
+        private System.Windows.Forms.Label numIn;
 
     }
 }
