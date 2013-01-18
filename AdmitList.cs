@@ -10,7 +10,7 @@ namespace SU_MT2000_SUIDScanner
     class AdmitList
     {
         private const string AdmitListFolder = "\\Application Data\\SU_MT2000_SUIDScanner\\admit-lists\\";
-        private const string FIRST_LINE_REGEX = "^!!!LID///DIF2///(.+)///([0-9]+)///([0-9]+)///$";
+        private const string FIRST_LINE_REGEX = "^!!!LID///DIF2///(.+)///([0-9]+)///([0-9]+)///([0-9]+)///$";
 
         public static string[] GetAllAdmitListFilenames()
         {
@@ -42,14 +42,16 @@ namespace SU_MT2000_SUIDScanner
             try {
                 System.Text.RegularExpressions.Match match = System.Text.RegularExpressions.Regex.Match(line,FIRST_LINE_REGEX);
                 string eventName = match.Groups[1].ToString();
-                string dataDateStr = match.Groups[2].ToString();
-                string exportDateStr = match.Groups[3].ToString();
+                string eventId = match.Groups[2].ToString();
+                string dataDateStr = match.Groups[3].ToString();
+                string exportDateStr = match.Groups[4].ToString();
                 DateTime dataDate = UnixTimeStampToDateTime(Convert.ToDouble(dataDateStr));
                 DateTime exportDate = UnixTimeStampToDateTime(Convert.ToDouble(exportDateStr));
 
                 AdmitListInfo info = new AdmitListInfo();
                 info.filePath = filename;
                 info.eventName = eventName;
+                info.eventId = eventId;
                 info.dataDate = dataDate;
                 info.exportDate = exportDate;
 
@@ -73,8 +75,12 @@ namespace SU_MT2000_SUIDScanner
         }
 
         #region Card Processor setup functions
-        public static void SetupProcessorFromFile(string filename, CardProcessor cardProcessor)
+        public static CardProcessor SetupProcessorFromFile(string filename)
         {
+            AdmitListInfo info = GetAdmitListInfo(filename);
+
+            CardProcessor cardProcessor = new CardProcessor(info.eventName, info.eventId);
+
             try
             {
                 StreamReader file = new StreamReader(filename);
@@ -113,6 +119,8 @@ namespace SU_MT2000_SUIDScanner
             } catch (IOException) {
                 throw new Exception(String.Format("Could not read the admit list. Ensure {0} exists", filename));
             }
+
+            return cardProcessor;
         }
 
         private static void AddMessageLine(CardProcessor p, string line)
@@ -152,6 +160,7 @@ namespace SU_MT2000_SUIDScanner
     struct AdmitListInfo {
         public string eventName;
         public string filePath;
+        public string eventId;
         public DateTime dataDate;
         public DateTime exportDate;
     }

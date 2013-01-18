@@ -12,12 +12,22 @@ namespace SU_MT2000_SUIDScanner
     {
         #region Data & management methods
         public string EventName = "";
+        public string EventId = "";
         public bool EnableScanLog = false;
 
         public static TimeSpan REPEAT_OK_TIME = new TimeSpan(0, 0, 30);
 
         protected SUIDs SUIDs = new SUIDs();
         protected Messages Messages = new Messages();
+
+        protected ScanLog log;
+
+        public CardProcessor(string eventName, string eventId)
+        {
+            this.EventId = eventId;
+            this.EventName = eventName;
+            this.log = new ScanLog(this);
+        }
 
         public void AddMessage(Message message)
         {
@@ -54,8 +64,7 @@ namespace SU_MT2000_SUIDScanner
         }
 
         /// <summary>
-        /// Updates the supplied barcode_id to reflect admission at DateTime.Now. Also logs the admission if
-        /// the scan log is enabled.
+        /// Updates the supplied barcode_id to reflect admission at DateTime.Now.
         /// </summary>
         /// <param name="barcode_id"></param>
         public void DoAdmit(string barcode_id)
@@ -65,13 +74,13 @@ namespace SU_MT2000_SUIDScanner
                 SUIDs[barcode_id].admitted = true;
                 SUIDs[barcode_id].setAdmitTime(DateTime.Now);
             }
-
-            LogAdmit(barcode_id);
         }
 
         /// <summary>
         /// Attempts to admit the person, or returns an appropriate error message. This is the main method
         /// for most applications that don't have special requirements.
+        /// 
+        /// Also logs the scan, if the scan log is enabled.
         /// </summary>
         /// <param name="barcode_id"></param>
         /// <returns></returns>
@@ -94,6 +103,9 @@ namespace SU_MT2000_SUIDScanner
                 info.status = AdmitStatus.REPEAT;
                 info.message = Message.RepeatMessage;
             }
+
+            DoLog(barcode_id, GetMessage(barcode_id));
+
             return info;
         }
 
@@ -137,9 +149,9 @@ namespace SU_MT2000_SUIDScanner
         }
         #endregion
 
-        protected void LogAdmit(string barcode_id)
+        protected void DoLog(string barcode_id, Message m)
         {
-            // nothing yet
+            log.Log(barcode_id, m);
         }
     }
 

@@ -18,9 +18,9 @@ namespace SU_MT2000_SUIDScanner
             this.small_message = small_message;
         }
 
-        public static Message InvalidMessage = new Message(-1, "INVALID", "Not a current student ID.");
+        public static Message InvalidMessage = new Message(-99, "INVALID", "Not a current student ID.");
         public static Message RepeatMessage = new Message(-1, "REPEAT", "ID was already scanned.");
-        public static Message UnknownMessage = new Message(-1, "ERROR", "An unknown error occurred.");
+        public static Message UnknownMessage = new Message(-2, "ERROR", "An unknown error occurred.");
     }
 
     class Messages : SortedList<short, Message> { }

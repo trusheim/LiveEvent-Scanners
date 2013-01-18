@@ -113,8 +113,7 @@ namespace SU_MT2000_SUIDScanner
             sForm.ShowDialog();
 
             this.ShowSpinner = true;
-            processor = new CardProcessor();
-            AdmitList.SetupProcessorFromFile(MainForm.admit_file, processor);
+            processor = AdmitList.SetupProcessorFromFile(MainForm.admit_file);
             this.ShowSpinner = false;
 
             // alert that we are done!
