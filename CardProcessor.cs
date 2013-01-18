@@ -104,7 +104,7 @@ namespace SU_MT2000_SUIDScanner
         /// <returns></returns>
         public bool IsRepeat(string barcode_id)
         {
-            if (SUIDs.ContainsKey(barcode_id) && SUIDs[barcode_id].admit_time < DateTime.Now.Subtract(REPEAT_OK_TIME))
+            if (SUIDs.ContainsKey(barcode_id) && SUIDs[barcode_id].admitted && SUIDs[barcode_id].admit_time < DateTime.Now.Subtract(REPEAT_OK_TIME))
             {
                 return true;
             }
