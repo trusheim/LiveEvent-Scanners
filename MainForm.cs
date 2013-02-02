@@ -50,7 +50,6 @@ namespace SU_MT2000_SUIDScanner
             menu.Add(new MenuDataItem("Save Admits", "save", null, Config.SaveBitmap));
             menu.Add(new MenuDataItem("Sales Mode", "sales", null, null));
             menu.Add(new MenuDataItem("Exit", "exit", null, Config.CloseBitmap));
-            menu.Add(new MenuDataItem("Etc", "etc", null, Config.CloseBitmap));
             
             readLabelEvent = new ReadLabelEventDelegate(ReadLabelEventCallback);
             RLHandler = new ScannerServicesClient.ReadLabelHandler(this.ReadLabelEventCallback);
@@ -121,6 +120,7 @@ namespace SU_MT2000_SUIDScanner
 
             this.numAdmitted = 0;
             admit_processed = true;
+
             in_processing = false;
         }
         #endregion
@@ -263,19 +263,13 @@ namespace SU_MT2000_SUIDScanner
                     clearDisplay();
                     Close();
                 }
-
-                else if (menuItem.Command == "etc")
-                {
-                    SelectForm f = new SelectForm();
-                    f.Show();
-                }
             }
         }
 
         private void Save()
         {
             this.ShowSpinner = true;
-            bool ok = false; // used to be the .Save() action
+            bool ok = true; // used to be the .Save() action
             //TODO: fix and add back in if necessary
             this.ShowSpinner = false;
             if (ok)
